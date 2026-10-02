@@ -1,23 +1,25 @@
 cff-version: 1.2.0
-title: "Low-Eval Kit — Évaluation de VLM en environnement à ressources limitées"
-message: "Si vous utilisez ce logiciel, citez-le comme ci-dessous."
+title: "Frugal Multimodal Alignment — Bench-Low, Data-Low et Low-Eval Kit"
+message: "Si vous utilisez ces travaux, citez-les comme ci-dessous."
 type: software
 authors:
-  - family-names: "Équipe Low-Eval"
+  - family-names: "Mikail"
+    given-names: "Mouaz"
 abstract: >-
-  Kit de recherche pour l'évaluation de modèles de langage multimodaux
-  (VLM) en environnements à ressources contraintes, appliqué à la
-  correction formative de productions d'élèves en mathématiques.
-  Comprend trois artefacts : Low-Eval kit (pipeline d'évaluation),
-  Data-Low (construction contrôlée du corpus) et Bench-Low (recalcul
-  indépendant des scores de référence).
+  Protocole d'évaluation frugale de modèles de langage multimodaux (VLM)
+  en environnements à ressources contraintes, appliqué à la correction
+  formative de productions d'élèves en mathématiques (baccalauréat
+  tchadien). Trois artefacts : Low-Eval Kit (pipeline d'évaluation),
+  Data-Low (corpus annoté) et Bench-Low (résultats verrouillés).
 version: 2.0.0
 date-released: 2026-10-02
-license: MIT
-repository-code: "https://github.com/<organisation>/low-eval-kit"
+license: CC-BY-NC-4.0
+repository-code: "https://github.com/mouazmikail/frugal-multimodal-alignment"
+url: "https://github.com/mouazmikail/frugal-multimodal-alignment"
 keywords:
   - évaluation
   - VLM
   - quantification NF4
+  - IA frugale
+  - éducation
   - reproductibilité
-  - éducation STEM
