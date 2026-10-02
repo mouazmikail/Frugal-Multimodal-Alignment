@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frugal Multimodal Alignment — Bench-Low · Data-Low · Low-Eval Kit</title>
+<!--
+  Page de garde du projet Frugal Multimodal Alignment (thèse, CY Cergy Paris
+  Université). Fichier autonome : aucun asset externe, aucune dépendance —
+  hébergeable tel quel en GitHub Pages (Settings → Pages → branch main).
+-->
+<style>
+  /* ---------- Base ---------- */
+  :root {
+    --fond: #0d1117;            /* fond principal, profond et neutre */
+    --panneau: #161b22;         /* cartes et panneaux */
+    --bordure: #2d333b;         /* filets discrets */
+    --texte: #e6edf3;           /* texte principal */
+    --texte-doux: #9da7b3;      /* texte secondaire */
+    --accent: #4cc38a;          /* vert frugal : sobriété numérique */
+    --accent-2: #58a6ff;        /* bleu : liens et code */
+    --or: #d29922;              /* valeurs verrouillées */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--fond);
+    color: var(--texte);
+    line-height: 1.65;
+  }
+  .conteneur { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- En-tête ---------- */
+  header {
+    padding: 72px 0 48px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #12261c 0%, var(--fond) 70%);
+    border-bottom: 1px solid var(--bordure);
+    text-align: center;
+  }
+  .badge-these {
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+  }
+  header h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em; }
+  header .sous-titre { color: var(--texte-doux); font-size: 1.15rem; margin-top: 10px; }
+  header .auteur { margin-top: 22px; color: var(--texte-doux); font-size: 0.95rem; }
+  header .auteur strong { color: var(--texte); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 56px 0; }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+  }
+  .intro-section { color: var(--texte-doux); max-width: 760px; margin-top: 12px; }
+
+  /* ---------- Grille des trois dépôts ---------- */
+  .grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 28px; }
+  .carte {
+    background: var(--panneau);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .carte:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .carte .etiquette {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .etq-code  { background: #123a2a; color: var(--accent); }
+  .etq-donne { background: #12304a; color: var(--accent-2); }
+  .etq-resul { background: #3a2f12; color: var(--or); }
+  .carte h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .carte p { color: var(--texte-doux); font-size: 0.92rem; }
+  .carte ul { margin: 12px 0 0 18px; color: var(--texte-doux); font-size: 0.88rem; }
+  .carte a.lien-depot {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .carte a.lien-depot:hover { text-decoration: underline; }
+
+  /* ---------- Valeurs verrouillées ---------- */
+  .bandeau-valeurs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .valeur {
+    background: var(--panneau);
+    border: 1px solid var(--or);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .valeur .chiffre { font-size: 2rem; font-weight: 700; color: var(--or); }
+  .valeur .legende { color: var(--texte-doux); font-size: 0.85rem; margin-top: 4px; }
+
+  /* ---------- Formule du score ---------- */
+  .formule {
+    background: var(--panneau);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+    text-align: center;
+    font-size: 1.25rem;
+    font-family: "Cambria Math", Georgia, serif;
+  }
+  .formule .poids { color: var(--accent); }
+  .formule .detail { font-size: 0.9rem; color: var(--texte-doux); margin-top: 10px; font-family: inherit; }
+
+  /* ---------- Chaîne canonique ---------- */
+  .etapes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; list-style: none; counter-reset: etape; }
+  .etapes li {
+    counter-increment: etape;
+    background: var(--panneau);
+    border: 1px solid var(--bordure);
+    border-radius: 8px;
+    padding: 10px 16px 10px 42px;
+    position: relative;
+    font-size: 0.9rem;
+    color: var(--texte-doux);
+  }
+  .etapes li::before {
+    content: counter(etape);
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 22px; height: 22px;
+    background: var(--accent);
+    color: #0d1117;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- Pied de page ---------- */
+  footer {
+    border-top: 1px solid var(--bordure);
+    padding: 36px 0 48px;
+    color: var(--texte-doux);
+    font-size: 0.88rem;
+  }
+  footer .citation {
+    background: var(--panneau);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-top: 14px;
+  }
+  code {
+    background: #1c2128;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.88em;
+    color: var(--accent-2);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== EN-TÊTE : identité du projet ===================== -->
+<header>
+  <div class="conteneur">
+    <span class="badge-these">Thèse — CY Cergy Paris Université</span>
+    <h1>Frugal Multimodal Alignment</h1>
+    <p class="sous-titre">Évaluation frugale de modèles multimodaux pour l'éducation&nbsp;:
+      Bench-Low · Data-Low · Low-Eval Kit</p>
+    <p class="auteur"><strong>Mouaz Mikail</strong> — alignement vision-langage sobre,
+      reproductible et déployable sur infrastructure limitée.</p>
+  </div>
+</header>
+
+<!-- ===================== PRÉSENTATION ===================== -->
+<section>
+  <div class="conteneur">
+    <h2>Le projet en bref</h2>
+    <p class="intro-section">
+      Ce projet fournit un protocole complet pour évaluer des modèles de langage
+      multimodaux (VLM) dans un contexte éducatif à ressources contraintes&nbsp;:
+      un corpus annoté de sujets du baccalauréat tchadien (<strong>Data-Low</strong>),
+      un kit de mesure reproductible (<strong>Low-Eval Kit</strong>) et un dépôt de
+      résultats verrouillés (<strong>Bench-Low</strong>). Le score composite
+      <code>S</code> arbitre le compromis exactitude (CA), utilité pédagogique (UP)
+      et coût environnemental (ECC).
+    </p>
+  </div>
+</section>
+
+<!-- ===================== LES TROIS DÉPÔTS ===================== -->
+<section>
+  <div class="conteneur">
+    <h2>Trois dépôts, un protocole</h2>
+    <div class="grille">
+
+      <article class="carte">
+        <span class="etiquette etq-code">Codes</span>
+        <h3>Low-Eval Kit</h3>
+        <p>Chaîne canonique d'évaluation en 7 étapes&nbsp;: corpus → prompt → modèle
+          quantifié NF4 → inférence → métriques → SQLite → rapports.</p>
+        <ul>
+          <li>12 modules commentés (annexe F du manuscrit)</li>
+          <li>8 métadonnées de reproductibilité journalisées (§7.2)</li>
+          <li>Reprise sur incident, tests verrouillés, CI, Docker</li>
+        </ul>
+        <a class="lien-depot" href="https://github.com/mouazmikail/low-eval-kit">github.com/mouazmikail/low-eval-kit →</a>
+      </article>
+
+      <article class="carte">
+        <span class="etiquette etq-donne">Données</span>
+        <h3>Data-Low</h3>
+        <p>Corpus annoté des sujets de mathématiques (séries C, D, E), OCR contrôlé
+          et double annotation inter-annotateurs.</p>
+        <ul>
+          <li>Schéma v2.0 (tableau 2.6), alias v1 normalisés</li>
+          <li>Taxonomie des 5 familles d'erreurs (κ ≥ 0,75)</li>
+          <li>Pipeline de scan à feuille d'annotation, CC BY-NC 4.0</li>
+        </ul>
+        <a class="lien-depot" href="https://github.com/mouazmikail/data-low">github.com/mouazmikail/data-low →</a>
+      </article>
+
+      <article class="carte">
+        <span class="etiquette etq-resul">Résultats</span>
+        <h3>Bench-Low</h3>
+        <p>Résultats consolidés des campagnes, régénérés par le kit — jamais édités
+          à la main — avec front de Pareto CA/UP/ECC.</p>
+        <ul>
+          <li>Référentiel verrouillé (tableau 4.1, 6 modèles)</li>
+          <li>Front&nbsp;: Qwen2-VL-7B · LLaVA-1.5-7B · MiniCPM-V-2.8B</li>
+          <li>Checklist d'intégrité avant chaque publication</li>
+        </ul>
+        <a class="lien-depot" href="https://github.com/mouazmikail/bench-low">github.com/mouazmikail/bench-low →</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VALEURS VERROUILLÉES ===================== -->
+<section>
+  <div class="conteneur">
+    <h2>Valeurs de référence verrouillées</h2>
+    <p class="intro-section">Ces valeurs sont reproduites par les tests unitaires du kit&nbsp;;
+      toute nouvelle campagne s'inscrit au registre sans jamais les écraser.</p>
+    <div class="bandeau-valeurs">
+      <div class="valeur"><div class="chiffre">0,876</div><div class="legende">ECC — Qwen2-VL-7B</div></div>
+      <div class="valeur"><div class="chiffre">0,787</div><div class="legende">Score S — Qwen2-VL-7B</div></div>
+      <div class="valeur"><div class="chiffre">3</div><div class="legende">modèles sur le front de Pareto</div></div>
+      <div class="valeur"><div class="chiffre">≤ 3,2 %</div><div class="legende">CV de répétabilité (n = 10 runs)</div></div>
+    </div>
+    <div class="formule">
+      S = <span class="poids">0,4</span>·CA + <span class="poids">0,4</span>·UP + <span class="poids">0,2</span>·ECC
+      <div class="detail">
+        CA = exactitude d'analyse (F1, P@k, BERTScore, rappel de concepts) ·
+        UP = utilité pédagogique (jugement humain) ·
+        ECC = sobriété (mémoire normalisée 1→32 Go, latence réf. 10 000 ms)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CHAÎNE CANONIQUE ===================== -->
+<section>
+  <div class="conteneur">
+    <h2>Chaîne canonique (§7.1)</h2>
+    <ol class="etapes">
+      <li>Charger le corpus</li>
+      <li>Construire le prompt</li>
+      <li>Charger le modèle quantifié</li>
+      <li>Inférence + sauvegarde JSON</li>
+      <li>Calculer les métriques</li>
+      <li>Insérer dans SQLite</li>
+      <li>Rapports automatiques</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== PIED DE PAGE ===================== -->
+<footer>
+  <div class="conteneur">
+    <p><strong>Licence.</strong> Codes du kit&nbsp;: usage recherche libre avec citation.
+      Corpus Data-Low et annotations&nbsp;: CC BY-NC 4.0. Les sujets d'examen restent la
+      propriété de l'État tchadien (diffusion recherche uniquement).</p>
+    <div class="citation">
+      M. Mikail, <em>Frugal Multimodal Alignment</em>, CY Cergy Paris Université —
+      Bench-Low + Data-Low + Low-Eval Kit, v2.0.0.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
