@@ -1,0 +1,26 @@
+# =============================================================================
+# Configuration du recalcul Bench-Low (sans GPU)
+# =============================================================================
+
+# CSV des résultats publiés (tableau 4.1) servant d'oracle de non-régression.
+reference_csv: "bench_low/reference_results.csv"
+
+# Front de Pareto attendu (tableau 4.2) — le test de non-régression échoue
+# si le recalcul produit un front différent.
+front_pareto_attendu:
+  - "Qwen2-VL-7B"
+  - "LLaVA-1.5-7B"
+  - "MiniCPM-V-2.8B"
+
+# Analyse de sensibilité (section 2.3) : poids dans [0,2 ; 0,6], pas 0,05,
+# somme = 1 → 45 combinaisons validées par le manuscrit.
+sensibilite:
+  poids_min: 0.2
+  poids_max: 0.6
+  pas: 0.05
+  nb_combinaisons_attendu: 45
+
+# Valeurs de référence exactes (arrondies) du tableau 4.1 — le premier modèle
+# du CSV doit reproduire ECC = 0.876 et S = 0.787 après recalcul.
+valeurs_attendues:
+  Qwen2-VL-7B: {ecc: 0.876, composite: 0.787}

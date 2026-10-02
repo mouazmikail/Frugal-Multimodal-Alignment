@@ -1,0 +1,16 @@
+# =============================================================================
+# Low-Eval Kit — dépendances de base (CPU, sans modèle)
+#
+# Ce fichier est volontairement minimal : tout le kit (scores, métriques,
+# Pareto, sensibilité, pipeline avec prédicteur injecté, base SQLite,
+# rapports CSV/JSON/HTML) fonctionne avec ces seules dépendances, y compris
+# dans la CI GitHub Actions. Les dépendances lourdes (PyTorch, Transformers,
+# bitsandbytes…) sont isolées dans requirements-gpu.txt.
+#
+# Chapitre 3, tableau 3.2 du manuscrit.
+# =============================================================================
+psutil>=5.9          # mesure mémoire/temps des processus (ECC)
+pandas>=2.0          # manipulation tabulaire des exports
+numpy>=1.24          # calculs numériques (métriques, sensibilité)
+PyYAML>=6.0          # protocole et panel de modèles (configs/*.yaml)
+Jinja2>=3.1          # gabarits HTML des rapports et fiches de supervision

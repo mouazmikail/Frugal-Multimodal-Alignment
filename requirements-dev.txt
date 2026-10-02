@@ -1,0 +1,9 @@
+# =============================================================================
+# Low-Eval Kit — dépendances de développement et de test
+#
+#     pip install -r requirements-dev.txt
+# =============================================================================
+-r requirements.txt
+
+pytest>=8.0                  # suite de tests CPU (tests/)
+ruff>=0.5                    # lint rapide, configuration dans pyproject.toml

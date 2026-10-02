@@ -1,0 +1,12 @@
+# =============================================================================
+# Low-Eval Kit — dépendances du tableau de bord (optionnel)
+#
+#     pip install -r requirements-dashboard.txt
+#     streamlit run dashboard/app.py
+#
+# Le tableau de bord lit uniquement la base SQLite des runs ; il n'a besoin
+# d'aucune dépendance GPU.
+# =============================================================================
+-r requirements.txt
+
+streamlit>=1.30              # interface interactive de suivi des campagnes

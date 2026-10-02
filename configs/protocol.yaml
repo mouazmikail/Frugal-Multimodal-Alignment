@@ -1,0 +1,52 @@
+# =============================================================================
+# Protocole expérimental Low-Eval (chapitre 2, sections 2.2 et 2.3)
+# =============================================================================
+
+# Reproductibilité : la graine fixe le tirage de tout échantillonnage aléatoire
+# (ordre du corpus, sélection des sous-échantillons) ; le code la propage
+# aux générateurs aléatoires de Python, NumPy et PyTorch au démarrage.
+seed: 42
+
+# Répétitions de chaque campagne : le coefficient de variation (CV) des scores
+# doit rester sous la borne 3,2 % exigée par l'hypothèse H2 (répétabilité).
+n_runs: 5
+
+# Paramètres de génération (décodage) — journalisés dans les métadonnées de
+# chaque run (section 7.2, métadonnée n°3 « paramètres de décodage »).
+generation:
+  max_new_tokens: 512
+  temperature: 0.1        # décodage quasi déterministe pour la reproductibilité
+  top_p: 0.9
+  do_sample: true
+
+# Quantification NF4 (tableau 3.4 : réduction mémoire 67,9 % à 71,9 %).
+quantization:
+  methode: nf4
+  dtype_calcul: float16
+  double_quant: true
+
+# Bornes statistiques du protocole.
+statistics:
+  seuil_kappa: 0.75       # fiabilité inter-annotateurs par type d'erreur
+  cv_max: 0.032           # CV de répétabilité (3,2 %)
+  ic_confiance: 0.95      # niveau des intervalles de confiance
+
+# Environnements d'évaluation (tableau 2.3).
+environments:
+  cloud:
+    label: "Cloud — GPU A100 80 Go"
+    gpu: true
+    ram_gb: 80
+  local:
+    label: "Local — GPU RTX 4060 32 Go"
+    gpu: true
+    ram_gb: 32
+  terrain:
+    label: "Terrain — CPU 2 GHz, 32 Go RAM, réseau 4G simulé (5 Mbps, 80 ms, 1 % de pertes)"
+    gpu: false
+    ram_gb: 32
+    cpu_limit_percent: 50          # via cpulimit pendant le protocole terrain
+    network:
+      debit_mbps: 5
+      latence_ms: 80
+      pertes_pct: 1.0

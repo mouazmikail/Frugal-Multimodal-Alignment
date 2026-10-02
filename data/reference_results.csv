@@ -1,0 +1,7 @@
+model,ca,up,latency_ms,memory_gb
+Qwen2-VL-7B,0.82,0.71,1420,4.3
+InternVL-8B,0.79,0.67,1520,4.5
+LLaVA-1.5-7B,0.78,0.65,1240,4.1
+MiniCPM-V-2.8B,0.62,0.58,680,1.8
+Gemma-7B,0.61,0.56,920,4.3
+Mistral-7B,0.59,0.54,890,4.2

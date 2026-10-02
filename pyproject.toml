@@ -1,0 +1,76 @@
+# =============================================================================
+# Low-Eval Kit — métadonnées du paquet Python et configuration des outils
+# =============================================================================
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "low-eval-kit"
+version = "2.0.0"
+description = "Kit d'évaluation de VLM en environnement à ressources limitées (Low-Eval, Data-Low, Bench-Low)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Équipe Low-Eval" }]
+keywords = ["évaluation", "VLM", "quantification", "NF4", "éducation", "reproductibilité"]
+# Les dépendances d'exécution restent dans requirements*.txt (voir README) ;
+# ici seule la cible CPU minimale est déclarée.
+dependencies = [
+    "psutil>=5.9",
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "PyYAML>=6.0",
+    "Jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "torch>=2.1",
+    "transformers>=4.36",
+    "peft>=0.7",
+    "bitsandbytes>=0.41",
+    "bert-score>=0.3.13",
+    "codecarbon>=2.5.1",
+]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+dashboard = ["streamlit>=1.30"]
+ocr = ["pytesseract>=0.3.10", "PyMuPDF>=1.24", "Pillow>=10.0"]
+
+[project.urls]
+# Renseigner après publication du dépôt GitHub.
+Repository = "https://github.com/<organisation>/low-eval-kit"
+
+[tool.setuptools]
+packages = ["loweval", "data_low", "bench_low"]
+
+[tool.setuptools.package-data]
+data_low = ["schema.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+    # Captures larges volontaires : les fallbacks matériel (GPU absent,
+    # pynvml indisponible) et l'écart d'une source défaillante lors de la
+    # collecte doivent absorber TOUTE erreur — une exception spécifique y
+    # laisserait passer des cas imprévus (pilotes, permissions…).
+    "BLE001",
+    # Silence volontaire dans les détections matériel : l'absence d'info est
+    # une information (None), elle est consignée par la valeur retournée.
+    "S110",
+    # Shebangs conservés dans scripts/ à titre documentatif ; le bit
+    # d'exécution est porté par git, pas par le système de fichiers local.
+    "EXE001",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Le gestionnaire de contexte __enter__ retourne explicitement self ;
+# l'annotation de type est conforme, le règle PYI034 est un faux positif ici.
+"loweval/monitoring.py" = ["PYI034"]
